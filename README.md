@@ -4,7 +4,6 @@
 
 > 🌐 **Live App**: [http://pdfox-generator.lovable.app](http://pdfox-generator.lovable.app)
 
----
 
 ## ✨ Features
 
@@ -13,7 +12,6 @@
 - Developer-first architecture using Vite + React + Tailwind
 - Simple deployment and domain integration
 
----
 
 ## 🚀 Tech Stack
 
@@ -23,7 +21,6 @@
 - 💨 **Tailwind CSS** – Utility-first CSS framework
 - 🎨 **shadcn/ui** – Reusable and accessible UI components
 
----
 
 ## 🛠 Local Development Setup
 
@@ -38,7 +35,6 @@ Ensure you have the following installed:
 
 > We recommend installing Node via [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
----
 
 ### ⚙️ Setup Instructions
 
