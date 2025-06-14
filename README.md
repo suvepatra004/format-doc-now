@@ -44,7 +44,7 @@ Ensure you have the following installed:
 
 ```bash
 # 1. Clone the repository
-git clone <YOUR_GIT_REPO_URL>
+git clone gh repo clone suvepatra004/format-doc-now
 
 # 2. Navigate into the project folder
 cd pdfox
