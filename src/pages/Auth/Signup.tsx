@@ -21,7 +21,8 @@ export default function Signup() {
     setLoading(true);
     try {
       await signUp(email, password, fullName);
-      // User will be redirected after email verification
+      // Show success message - user needs to verify email
+      // The auth hook already shows the toast message
     } catch (error) {
       // Error is handled in the auth hook
     } finally {

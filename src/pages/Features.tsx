@@ -147,7 +147,7 @@ const Features = () => {
       {/* Features Grid */}
       <section className="pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
               <motion.div
                 key={feature.id}
@@ -158,38 +158,36 @@ const Features = () => {
               >
                 <Card className="glass hover:glass-strong transition-all duration-300 border-border/40 h-full">
                   {/* Feature Image */}
-                  <div className="relative h-48 overflow-hidden rounded-t-lg">
+                  <div className="relative h-32 overflow-hidden rounded-t-lg">
                     <img
-                      src={`https://images.unsplash.com/${feature.image}?w=600&h=300&fit=crop`}
+                      src={`https://images.unsplash.com/${feature.image}?w=400&h=200&fit=crop`}
                       alt={feature.title}
                       className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                    <div className="absolute top-4 right-4">
+                    <div className="absolute top-2 right-2">
                       {getStatusBadge(feature.status)}
                     </div>
-                    <div className="absolute bottom-4 left-4">
-                      <feature.icon className="h-8 w-8 text-primary" />
+                    <div className="absolute bottom-2 left-2">
+                      <feature.icon className="h-6 w-6 text-primary" />
                     </div>
                   </div>
 
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl">{feature.title}</CardTitle>
-                    </div>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg">{feature.title}</CardTitle>
                   </CardHeader>
 
-                  <CardContent className="space-y-4">
-                    <p className="text-muted-foreground leading-relaxed">
+                  <CardContent className="space-y-3">
+                    <p className="text-muted-foreground text-sm leading-relaxed">
                       {feature.description}
                     </p>
                     
                     <div className="space-y-2">
-                      <h4 className="font-medium text-sm text-foreground">Key Features:</h4>
+                      <h4 className="font-medium text-xs text-foreground">Key Features:</h4>
                       <ul className="space-y-1">
-                        {feature.points.map((point, pointIndex) => (
-                          <li key={pointIndex} className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                        {feature.points.slice(0, 3).map((point, pointIndex) => (
+                          <li key={pointIndex} className="flex items-start gap-2 text-xs text-muted-foreground">
+                            <div className="h-1 w-1 rounded-full bg-primary mt-1.5 flex-shrink-0" />
                             {point}
                           </li>
                         ))}

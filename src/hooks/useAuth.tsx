@@ -50,14 +50,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           data: {
             full_name: fullName,
           },
+          emailRedirectTo: `${window.location.origin}/`,
         },
       });
 
       if (error) throw error;
 
       toast({
-        title: "Account created!",
-        description: "Please check your email to verify your account.",
+        title: "Account created successfully!",
+        description: "Please check your email and click the confirmation link to verify your account.",
       });
     } catch (error: any) {
       toast({

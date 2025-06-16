@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Download, FileText, Save } from 'lucide-react';
+import { Download, FileText, Save, File } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import html2pdf from 'html2pdf.js';
@@ -14,42 +14,84 @@ export default function Editor() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [formattedContent, setFormattedContent] = useState('');
+  const [customFilename, setCustomFilename] = useState('');
   const { user } = useAuth();
   const { toast } = useToast();
 
   const formatContent = () => {
     if (!content.trim()) return;
 
-    // Simple auto-formatting logic
-    let formatted = content
-      .split('\n\n')
-      .map(paragraph => {
-        if (paragraph.length < 100 && !paragraph.includes('.')) {
-          return `<h2>${paragraph}</h2>`;
+    // Enhanced formatting logic
+    let lines = content.split('\n');
+    let formatted = '';
+    let currentSection = '';
+    
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i].trim();
+      
+      // Skip empty lines
+      if (!line) {
+        if (currentSection) {
+          formatted += '</p>\n\n';
+          currentSection = '';
         }
-        return `<p>${paragraph}</p>`;
-      })
-      .join('\n');
+        continue;
+      }
+      
+      // Detect headings (short lines without periods, or lines with specific patterns)
+      if ((line.length < 80 && !line.includes('.') && !line.includes(',')) || 
+          line.match(/^(Chapter|Section|\d+\.)/i)) {
+        if (currentSection) {
+          formatted += '</p>\n\n';
+          currentSection = '';
+        }
+        formatted += `<h2 style="font-size: 1.5rem; font-weight: bold; margin: 1rem 0 0.5rem 0; color: #333;">${line}</h2>\n\n`;
+      }
+      // Detect bullet points
+      else if (line.match(/^[-*•]/)) {
+        if (currentSection) {
+          formatted += '</p>\n\n';
+          currentSection = '';
+        }
+        formatted += `<ul style="margin: 0.5rem 0; padding-left: 1.5rem;"><li style="margin: 0.25rem 0;">${line.replace(/^[-*•]\s*/, '')}</li></ul>\n`;
+      }
+      // Regular paragraphs
+      else {
+        if (!currentSection) {
+          formatted += '<p style="margin: 1rem 0; line-height: 1.6; text-align: justify;">';
+          currentSection = 'paragraph';
+        } else {
+          formatted += ' ';
+        }
+        formatted += line;
+      }
+    }
+    
+    // Close any open paragraph
+    if (currentSection) {
+      formatted += '</p>';
+    }
 
     setFormattedContent(formatted);
     toast({
       title: "Content formatted!",
-      description: "Your content has been automatically formatted.",
+      description: "Your content has been formatted with proper spacing and structure.",
     });
   };
 
   const downloadPDF = () => {
+    const filename = customFilename || title || 'document';
     const element = document.createElement('div');
     element.innerHTML = `
-      <div style="padding: 40px; font-family: Arial, sans-serif;">
-        <h1 style="color: #333; margin-bottom: 30px;">${title || 'Document'}</h1>
-        ${formattedContent || content}
+      <div style="padding: 40px; font-family: 'Quicksand', Arial, sans-serif; max-width: 800px; margin: 0 auto;">
+        <h1 style="color: #333; margin-bottom: 30px; font-size: 2rem; font-weight: bold;">${title || 'Document'}</h1>
+        ${formattedContent || `<p style="margin: 1rem 0; line-height: 1.6;">${content}</p>`}
       </div>
     `;
 
     const opt = {
       margin: 1,
-      filename: `${title || 'document'}.pdf`,
+      filename: `${filename}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -59,20 +101,21 @@ export default function Editor() {
     
     toast({
       title: "PDF downloaded!",
-      description: "Your document has been saved as PDF.",
+      description: `Your document has been saved as ${filename}.pdf`,
     });
   };
 
   const downloadTXT = () => {
+    const filename = customFilename || title || 'document';
     const element = document.createElement('a');
     const file = new Blob([`${title}\n\n${content}`], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
-    element.download = `${title || 'document'}.txt`;
+    element.download = `${filename}.txt`;
     element.click();
     
     toast({
       title: "TXT downloaded!",
-      description: "Your document has been saved as TXT.",
+      description: `Your document has been saved as ${filename}.txt`,
     });
   };
 
@@ -156,6 +199,24 @@ export default function Editor() {
                     </div>
                   )}
                 </div>
+                {/* Custom Filename Section */}
+                <div className="space-y-2">
+                  <Label htmlFor="filename">Custom Filename (Optional)</Label>
+                  <div className="flex gap-2">
+                    <File className="h-4 w-4 mt-3 text-muted-foreground" />
+                    <Input
+                      id="filename"
+                      placeholder="Enter custom filename..."
+                      value={customFilename}
+                      onChange={(e) => setCustomFilename(e.target.value)}
+                      className="glass"
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Leave blank to use document title as filename
+                  </p>
+                </div>
+
                 <div className="flex gap-2">
                   <Button
                     onClick={downloadPDF}
