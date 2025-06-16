@@ -21,61 +21,133 @@ export default function Editor() {
   const formatContent = () => {
     if (!content.trim()) return;
 
-    // Enhanced formatting logic
-    let lines = content.split('\n');
+    let processedContent = content;
+
+    // 1. Fix proper casing and "i" to "I"
+    processedContent = processedContent.replace(/\bi\b/g, 'I');
+    processedContent = processedContent.replace(/([.!?]\s*)([a-z])/g, (match, punct, letter) => punct + letter.toUpperCase());
+    processedContent = processedContent.replace(/^([a-z])/, (match, letter) => letter.toUpperCase());
+
+    // 2. Fix punctuation - remove repeated punctuation
+    processedContent = processedContent.replace(/[!]{2,}/g, '!');
+    processedContent = processedContent.replace(/[?]{2,}/g, '?');
+    processedContent = processedContent.replace(/[.]{2,}/g, '.');
+    processedContent = processedContent.replace(/[,]{2,}/g, ',');
+
+    // 3. Clean spacing - remove extra spaces
+    processedContent = processedContent.replace(/\s+/g, ' ');
+    processedContent = processedContent.replace(/\s+([.!?,:;])/g, '$1');
+    processedContent = processedContent.replace(/([.!?])\s*([A-Z])/g, '$1 $2');
+
+    // 4. Wrap potential code snippets in backticks
+    processedContent = processedContent.replace(/\b(function\(|console\.log|\.js|\.html|\.css|\/\/|#include|import |export )/g, '`$1');
+    processedContent = processedContent.replace(/(`[^`]*?)(\s|$)/g, '$1`$2');
+
+    // Split into lines for further processing
+    let lines = processedContent.split('\n');
     let formatted = '';
     let currentSection = '';
+    let inList = false;
     
     for (let i = 0; i < lines.length; i++) {
       let line = lines[i].trim();
       
-      // Skip empty lines
+      // Skip completely empty lines but preserve paragraph breaks
       if (!line) {
-        if (currentSection) {
+        if (currentSection === 'paragraph') {
           formatted += '</p>\n\n';
           currentSection = '';
+        } else if (inList) {
+          formatted += '</ul>\n\n';
+          inList = false;
         }
         continue;
       }
+
+      // 5. Fix broken sentences - merge lines that don't end with proper punctuation
+      if (i > 0 && !lines[i-1].trim().match(/[.!?]$/) && !line.match(/^[-*•\d]/)) {
+        // This line might be a continuation of the previous line
+        if (currentSection === 'paragraph') {
+          formatted += ' ' + line;
+          continue;
+        }
+      }
       
-      // Detect headings (short lines without periods, or lines with specific patterns)
-      if ((line.length < 80 && !line.includes('.') && !line.includes(',')) || 
-          line.match(/^(Chapter|Section|\d+\.)/i)) {
-        if (currentSection) {
+      // 6. Detect headings (short lines, specific patterns, or lines in ALL CAPS)
+      if (line.match(/^[A-Z\s]{5,}$/) || 
+          (line.length < 80 && !line.includes('.') && !line.includes(',') && line.length > 3) || 
+          line.match(/^(Chapter|Section|\d+\.|\d+\))/i)) {
+        
+        if (currentSection === 'paragraph') {
           formatted += '</p>\n\n';
           currentSection = '';
         }
-        formatted += `<h2 style="font-size: 1.5rem; font-weight: bold; margin: 1rem 0 0.5rem 0; color: #333;">${line}</h2>\n\n`;
+        if (inList) {
+          formatted += '</ul>\n\n';
+          inList = false;
+        }
+        
+        // Convert ALL CAPS to Title Case
+        if (line.match(/^[A-Z\s]+$/)) {
+          line = line.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+        }
+        
+        formatted += `<h2 style="font-size: 1.5rem; font-weight: bold; margin: 1.5rem 0 0.75rem 0; color: #333; text-transform: capitalize;">${line}</h2>\n\n`;
       }
-      // Detect bullet points
-      else if (line.match(/^[-*•]/)) {
-        if (currentSection) {
+      // 7. Detect and format lists
+      else if (line.match(/^[-*•]\s/) || line.match(/^\d+[.)]\s/)) {
+        if (currentSection === 'paragraph') {
           formatted += '</p>\n\n';
           currentSection = '';
         }
-        formatted += `<ul style="margin: 0.5rem 0; padding-left: 1.5rem;"><li style="margin: 0.25rem 0;">${line.replace(/^[-*•]\s*/, '')}</li></ul>\n`;
+        
+        if (!inList) {
+          formatted += '<ul style="margin: 0.75rem 0; padding-left: 1.5rem; list-style-type: disc;">\n';
+          inList = true;
+        }
+        
+        let listContent = line.replace(/^[-*•]\s*/, '').replace(/^\d+[.)]\s*/, '');
+        // Add period if missing
+        if (!listContent.match(/[.!?]$/)) {
+          listContent += '.';
+        }
+        formatted += `  <li style="margin: 0.5rem 0; line-height: 1.6;">${listContent}</li>\n`;
       }
-      // Regular paragraphs
+      // 8. Regular paragraphs
       else {
-        if (!currentSection) {
-          formatted += '<p style="margin: 1rem 0; line-height: 1.6; text-align: justify;">';
+        if (inList) {
+          formatted += '</ul>\n\n';
+          inList = false;
+        }
+        
+        if (currentSection !== 'paragraph') {
+          formatted += '<p style="margin: 1rem 0; line-height: 1.8; text-align: justify; text-indent: 1.5em;">';
           currentSection = 'paragraph';
         } else {
           formatted += ' ';
         }
+        
+        // Add period if sentence doesn't end with punctuation
+        if (!line.match(/[.!?]$/)) {
+          line += '.';
+        }
+        
         formatted += line;
       }
     }
     
-    // Close any open paragraph
-    if (currentSection) {
+    // Close any open tags
+    if (currentSection === 'paragraph') {
       formatted += '</p>';
+    }
+    if (inList) {
+      formatted += '</ul>';
     }
 
     setFormattedContent(formatted);
     toast({
-      title: "Content formatted!",
-      description: "Your content has been formatted with proper spacing and structure.",
+      title: "Content formatted successfully!",
+      description: "Applied advanced formatting with proper casing, punctuation, spacing, and structure.",
     });
   };
 
