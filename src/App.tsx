@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { Navbar } from "@/components/Navbar";
 import Landing from "./pages/Landing";
+import Features from "./pages/Features";
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import Editor from "./pages/Editor";
@@ -23,6 +24,7 @@ const App = () => (
           <Navbar />
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/features" element={<Features />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/editor" element={<Editor />} />
