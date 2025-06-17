@@ -5,9 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Download, FileText, Save, File } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Download, FileText, Save, File, Sparkles } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import html2pdf from 'html2pdf.js';
 
 export default function Editor() {
@@ -15,139 +17,67 @@ export default function Editor() {
   const [content, setContent] = useState('');
   const [formattedContent, setFormattedContent] = useState('');
   const [customFilename, setCustomFilename] = useState('');
+  const [tone, setTone] = useState<'casual' | 'professional' | 'story'>('professional');
+  const [isFormatting, setIsFormatting] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const formatContent = () => {
+  const formatContent = async () => {
+    if (!content.trim()) return;
+    
+    setIsFormatting(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('format-with-ai', {
+        body: { content, tone }
+      });
+
+      if (error) throw error;
+
+      if (data?.formattedContent) {
+        setFormattedContent(data.formattedContent);
+        toast({
+          title: "Content formatted with AI!",
+          description: `Applied ${tone} formatting with grammar fixes, structure, and subheadings.`,
+        });
+      } else {
+        throw new Error("No formatted content received");
+      }
+    } catch (error) {
+      console.error('AI formatting error:', error);
+      toast({
+        title: "AI formatting failed",
+        description: "Falling back to basic formatting...",
+        variant: "destructive",
+      });
+      
+      // Fallback to basic formatting
+      basicFormatContent();
+    } finally {
+      setIsFormatting(false);
+    }
+  };
+
+  const basicFormatContent = () => {
     if (!content.trim()) return;
 
     let processedContent = content;
 
-    // 1. Fix proper casing and "i" to "I"
+    // Basic formatting logic (simplified version of previous)
     processedContent = processedContent.replace(/\bi\b/g, 'I');
     processedContent = processedContent.replace(/([.!?]\s*)([a-z])/g, (match, punct, letter) => punct + letter.toUpperCase());
     processedContent = processedContent.replace(/^([a-z])/, (match, letter) => letter.toUpperCase());
-
-    // 2. Fix punctuation - remove repeated punctuation
-    processedContent = processedContent.replace(/[!]{2,}/g, '!');
-    processedContent = processedContent.replace(/[?]{2,}/g, '?');
-    processedContent = processedContent.replace(/[.]{2,}/g, '.');
-    processedContent = processedContent.replace(/[,]{2,}/g, ',');
-
-    // 3. Clean spacing - remove extra spaces
     processedContent = processedContent.replace(/\s+/g, ' ');
-    processedContent = processedContent.replace(/\s+([.!?,:;])/g, '$1');
-    processedContent = processedContent.replace(/([.!?])\s*([A-Z])/g, '$1 $2');
-
-    // 4. Wrap potential code snippets in backticks
-    processedContent = processedContent.replace(/\b(function\(|console\.log|\.js|\.html|\.css|\/\/|#include|import |export )/g, '`$1');
-    processedContent = processedContent.replace(/(`[^`]*?)(\s|$)/g, '$1`$2');
-
-    // Split into lines for further processing
-    let lines = processedContent.split('\n');
-    let formatted = '';
-    let currentSection = '';
-    let inList = false;
     
-    for (let i = 0; i < lines.length; i++) {
-      let line = lines[i].trim();
-      
-      // Skip completely empty lines but preserve paragraph breaks
-      if (!line) {
-        if (currentSection === 'paragraph') {
-          formatted += '</p>\n\n';
-          currentSection = '';
-        } else if (inList) {
-          formatted += '</ul>\n\n';
-          inList = false;
-        }
-        continue;
-      }
-
-      // 5. Fix broken sentences - merge lines that don't end with proper punctuation
-      if (i > 0 && !lines[i-1].trim().match(/[.!?]$/) && !line.match(/^[-*•\d]/)) {
-        // This line might be a continuation of the previous line
-        if (currentSection === 'paragraph') {
-          formatted += ' ' + line;
-          continue;
-        }
-      }
-      
-      // 6. Detect headings (short lines, specific patterns, or lines in ALL CAPS)
-      if (line.match(/^[A-Z\s]{5,}$/) || 
-          (line.length < 80 && !line.includes('.') && !line.includes(',') && line.length > 3) || 
-          line.match(/^(Chapter|Section|\d+\.|\d+\))/i)) {
-        
-        if (currentSection === 'paragraph') {
-          formatted += '</p>\n\n';
-          currentSection = '';
-        }
-        if (inList) {
-          formatted += '</ul>\n\n';
-          inList = false;
-        }
-        
-        // Convert ALL CAPS to Title Case
-        if (line.match(/^[A-Z\s]+$/)) {
-          line = line.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
-        }
-        
-        formatted += `<h2 style="font-size: 1.5rem; font-weight: bold; margin: 1.5rem 0 0.75rem 0; color: #333; text-transform: capitalize;">${line}</h2>\n\n`;
-      }
-      // 7. Detect and format lists
-      else if (line.match(/^[-*•]\s/) || line.match(/^\d+[.)]\s/)) {
-        if (currentSection === 'paragraph') {
-          formatted += '</p>\n\n';
-          currentSection = '';
-        }
-        
-        if (!inList) {
-          formatted += '<ul style="margin: 0.75rem 0; padding-left: 1.5rem; list-style-type: disc;">\n';
-          inList = true;
-        }
-        
-        let listContent = line.replace(/^[-*•]\s*/, '').replace(/^\d+[.)]\s*/, '');
-        // Add period if missing
-        if (!listContent.match(/[.!?]$/)) {
-          listContent += '.';
-        }
-        formatted += `  <li style="margin: 0.5rem 0; line-height: 1.6;">${listContent}</li>\n`;
-      }
-      // 8. Regular paragraphs
-      else {
-        if (inList) {
-          formatted += '</ul>\n\n';
-          inList = false;
-        }
-        
-        if (currentSection !== 'paragraph') {
-          formatted += '<p style="margin: 1rem 0; line-height: 1.8; text-align: justify; text-indent: 1.5em;">';
-          currentSection = 'paragraph';
-        } else {
-          formatted += ' ';
-        }
-        
-        // Add period if sentence doesn't end with punctuation
-        if (!line.match(/[.!?]$/)) {
-          line += '.';
-        }
-        
-        formatted += line;
-      }
-    }
-    
-    // Close any open tags
-    if (currentSection === 'paragraph') {
-      formatted += '</p>';
-    }
-    if (inList) {
-      formatted += '</ul>';
-    }
+    const paragraphs = processedContent.split('\n\n').filter(p => p.trim());
+    const formatted = paragraphs.map(p => 
+      `<p style="margin: 1rem 0; line-height: 1.8; text-align: justify;">${p.trim()}</p>`
+    ).join('\n\n');
 
     setFormattedContent(formatted);
     toast({
-      title: "Content formatted successfully!",
-      description: "Applied advanced formatting with proper casing, punctuation, spacing, and structure.",
+      title: "Content formatted!",
+      description: "Applied basic formatting.",
     });
   };
 
@@ -247,19 +177,42 @@ export default function Editor() {
                     className="glass"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="content">Content</Label>
-                  <Textarea
-                    id="content"
-                    placeholder="Paste your unformatted content here..."
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    className="min-h-[400px] glass resize-none"
-                  />
-                </div>
-                <Button onClick={formatContent} className="w-full">
-                  Auto-Format Content
-                </Button>
+                 <div>
+                   <Label htmlFor="content">Content</Label>
+                   <Textarea
+                     id="content"
+                     placeholder="Paste your unformatted content here..."
+                     value={content}
+                     onChange={(e) => setContent(e.target.value)}
+                     className="min-h-[300px] glass resize-none"
+                   />
+                 </div>
+                 <div>
+                   <Label htmlFor="tone">Formatting Style</Label>
+                   <Select value={tone} onValueChange={(value: 'casual' | 'professional' | 'story') => setTone(value)}>
+                     <SelectTrigger className="glass">
+                       <SelectValue placeholder="Select formatting style" />
+                     </SelectTrigger>
+                     <SelectContent>
+                       <SelectItem value="professional">Professional</SelectItem>
+                       <SelectItem value="casual">Casual</SelectItem>
+                       <SelectItem value="story">Story</SelectItem>
+                     </SelectContent>
+                   </Select>
+                 </div>
+                 <Button onClick={formatContent} disabled={isFormatting} className="w-full">
+                   {isFormatting ? (
+                     <>
+                       <Sparkles className="mr-2 h-4 w-4 animate-spin" />
+                       Formatting with AI...
+                     </>
+                   ) : (
+                     <>
+                       <Sparkles className="mr-2 h-4 w-4" />
+                       AI Format Content
+                     </>
+                   )}
+                 </Button>
               </CardContent>
             </Card>
           </motion.div>
@@ -275,18 +228,18 @@ export default function Editor() {
                 <CardTitle>Preview & Download</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="min-h-[400px] p-4 border border-border/40 rounded-lg glass-subtle">
-                  {formattedContent ? (
-                    <div
-                      dangerouslySetInnerHTML={{ __html: formattedContent }}
-                      className="prose prose-sm max-w-none"
-                    />
-                  ) : (
-                    <div className="text-muted-foreground text-center py-8">
-                      Format your content to see the preview
-                    </div>
-                  )}
-                </div>
+                 <div className="min-h-[300px] p-4 border border-border/40 rounded-lg glass-subtle overflow-y-auto max-h-[500px]">
+                   {formattedContent ? (
+                     <div
+                       dangerouslySetInnerHTML={{ __html: formattedContent }}
+                       className="prose prose-sm max-w-none [&>h2]:text-lg [&>h2]:font-bold [&>h2]:mt-6 [&>h2]:mb-3 [&>p]:mb-4 [&>p]:leading-relaxed"
+                     />
+                   ) : (
+                     <div className="text-muted-foreground text-center py-8">
+                       {isFormatting ? "AI is formatting your content..." : "Format your content to see the preview"}
+                     </div>
+                   )}
+                 </div>
                 {/* Custom Filename Section */}
                 <div className="space-y-2">
                   <Label htmlFor="filename">Custom Filename (Optional)</Label>
