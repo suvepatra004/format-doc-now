@@ -11,6 +11,8 @@
 - **Intelligent Parsing**: Detects headings, lists, code snippets, and improper line breaks
 - **Content Preservation**: Maintains original tone and intent while improving readability
 - **Real-time Preview**: See formatted content before downloading
+- **AI-Driven Enhancements**: Integrated with **Google Gemini AI** for better formatting accuracy and natural text structuring.
+- **Local Storage Privacy**: All data is stored locally for enhanced privacy and security.
 
 ### 📄 Multiple Export Formats
 - **PDF Export**: Professional PDF documents with custom styling
@@ -155,6 +157,24 @@ npm run preview
 # or
 yarn preview
 ```
+
+## 🔄 Recent Updates
+
+### ✅ New Features:
+- **Gemini AI Integration**  
+  Google's Gemini AI is now used to deliver improved formatting logic with more natural, structured outputs.
+
+- **Contact Us Section Added**  
+  A new feedback section allows users to reach out easily for queries, suggestions, or issue reporting.
+
+### 🎨 UI Improvements:
+- **Navigation Bar Redesign**  
+  A cleaner and more accessible navigation bar layout for better user experience.
+
+### 🛠️ Bug Fixes:
+- **Improved Formatted File Output**  
+  Fixed bugs in the downloadable document formatting – PDFs are now selectable and preserve the intended layout.
+
 
 ## 👤 Author
 
