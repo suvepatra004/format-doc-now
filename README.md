@@ -180,4 +180,4 @@ yarn preview
 
 Developed by Suvendu
 >For collaboration or freelance inquiries:
->📧 Email: your-rative.project.suve@gmail.com
+>📧 Email: rative.project.suve@gmail.com
