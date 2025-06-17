@@ -35,7 +35,13 @@ export default function Editor() {
       if (error) throw error;
 
       if (data?.formattedContent) {
-        setFormattedContent(data.formattedContent);
+        // Clean up any markdown artifacts like ```html or ```
+        let cleanedContent = data.formattedContent
+          .replace(/```html\s*/gi, '')
+          .replace(/```\s*/g, '')
+          .trim();
+        
+        setFormattedContent(cleanedContent);
         toast({
           title: "Content formatted with AI!",
           description: `Applied ${tone} formatting with grammar fixes, structure, and subheadings.`,
@@ -85,41 +91,59 @@ export default function Editor() {
     const filename = customFilename || title || 'document';
     const element = document.createElement('div');
     element.innerHTML = `
-      <div style="padding: 40px; font-family: 'Quicksand', Arial, sans-serif; max-width: 100%; margin: 0 auto; word-wrap: break-word; overflow-wrap: break-word;">
-        <h1 style="color: #333; margin-bottom: 30px; font-size: 2rem; font-weight: bold; page-break-inside: avoid;">${title || 'Document'}</h1>
-        <div style="line-height: 1.6; word-wrap: break-word; overflow-wrap: break-word;">
-          ${formattedContent || `<p style="margin: 1rem 0; line-height: 1.6;">${content}</p>`}
+      <div style="padding: 40px; font-family: 'Arial', sans-serif; max-width: 800px; margin: 0 auto; color: #333; line-height: 1.6;">
+        <h1 style="color: #333; margin-bottom: 30px; font-size: 24px; font-weight: bold; text-align: center; page-break-inside: avoid;">${title || 'Document'}</h1>
+        <div style="font-size: 14px; text-align: justify; word-wrap: break-word;">
+          ${formattedContent || `<p style="margin: 16px 0; line-height: 1.6;">${content}</p>`}
         </div>
       </div>
     `;
 
+    // Add the element to the DOM temporarily for proper rendering
+    document.body.appendChild(element);
+
     const opt = {
-      margin: [0.75, 0.75, 0.75, 0.75],
+      margin: 0.5,
       filename: `${filename}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
+      enableLinks: true,
       html2canvas: { 
-        scale: 1.5,
+        scale: 2,
         useCORS: true,
-        allowTaint: true,
-        width: 800,
-        windowWidth: 800,
-        scrollX: 0,
-        scrollY: 0
+        letterRendering: true,
+        allowTaint: false,
+        backgroundColor: '#ffffff',
+        removeContainer: true
       },
       jsPDF: { 
         unit: 'in', 
-        format: 'letter', 
+        format: 'a4', 
         orientation: 'portrait',
-        compress: true
+        putOnlyUsedFonts: true,
+        floatPrecision: 16
       },
       pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
-    html2pdf().set(opt).from(element).save();
-    
-    toast({
-      title: "PDF downloaded!",
-      description: `Your document has been saved as ${filename}.pdf`,
+    html2pdf().set(opt).from(element).save().then(() => {
+      // Remove the element from DOM after PDF generation
+      document.body.removeChild(element);
+      
+      toast({
+        title: "PDF downloaded!",
+        description: `Your document has been saved as ${filename}.pdf`,
+      });
+    }).catch((error) => {
+      // Remove element even if there's an error
+      if (document.body.contains(element)) {
+        document.body.removeChild(element);
+      }
+      console.error('PDF generation error:', error);
+      toast({
+        title: "PDF generation failed",
+        description: "Please try again",
+        variant: "destructive",
+      });
     });
   };
 
