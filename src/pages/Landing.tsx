@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { ContactSection } from '@/components/ContactSection';
 import {
   FileText,
   Download,
@@ -131,10 +132,10 @@ export default function Landing() {
               <Button
                 variant="outline"
                 size="lg"
-                onClick={() => navigate('/demo')}
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                 className="btn-glass text-lg px-8 py-6 rounded-xl"
               >
-                Try Demo
+                Contact Us
               </Button>
             </div>
           </motion.div>
@@ -291,6 +292,9 @@ export default function Landing() {
           </motion.div>
         </div>
       </section>
+
+      {/* Contact Section */}
+      <ContactSection />
     </div>
   );
 }

@@ -29,7 +29,7 @@ export function Navbar() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="fixed top-0 left-0 right-0 z-50 glass-strong border-b border-border/20 backdrop-blur-xl bg-background/10"
+      className="fixed top-0 left-0 right-0 z-50 glass-strong backdrop-blur-xl bg-background/10 rounded-b-2xl mx-4 mt-2"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -48,7 +48,7 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-sm font-bold transition-colors hover:text-primary ${
                 isActive('/') ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -56,7 +56,7 @@ export function Navbar() {
             </Link>
             <Link
               to="/features"
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-sm font-bold transition-colors hover:text-primary ${
                 isActive('/features') ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -64,21 +64,27 @@ export function Navbar() {
             </Link>
             <Link
               to="/pricing"
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-sm font-bold transition-colors hover:text-primary ${
                 isActive('/pricing') ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
               Pricing
             </Link>
+            <a
+              href="#contact"
+              className="text-sm font-bold transition-colors hover:text-primary text-muted-foreground"
+            >
+              Contact
+            </a>
             {user && (
-              <Link
-                to="/dashboard"
-                className={`text-sm font-medium transition-colors hover:text-primary ${
-                  isActive('/dashboard') ? 'text-primary' : 'text-muted-foreground'
-                }`}
-              >
-                Dashboard
-              </Link>
+                <Link
+                  to="/dashboard"
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    isActive('/dashboard') ? 'text-primary' : 'text-muted-foreground'
+                  }`}
+                >
+                  Dashboard
+                </Link>
             )}
           </div>
 
@@ -123,13 +129,13 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   onClick={() => navigate('/login')}
-                  className="btn-glass"
+                  className="btn-glass text-foreground hover:text-primary"
                 >
                   Sign In
                 </Button>
                 <Button
                   onClick={() => navigate('/signup')}
-                  className="bg-primary hover:bg-primary/90"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                   Sign Up
                 </Button>
@@ -154,7 +160,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-border/40 py-4"
+            className="md:hidden py-4"
           >
             <div className="flex flex-col space-y-2">
               <Link
@@ -171,14 +177,21 @@ export function Navbar() {
               >
                 Features
               </Link>
-              <Link
-                to="/pricing"
-                className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Pricing
-              </Link>
-              {user && (
+               <Link
+                 to="/pricing"
+                 className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary"
+                 onClick={() => setIsMenuOpen(false)}
+               >
+                 Pricing
+               </Link>
+               <a
+                 href="#contact"
+                 className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary"
+                 onClick={() => setIsMenuOpen(false)}
+               >
+                 Contact
+               </a>
+               {user && (
                 <Link
                   to="/dashboard"
                   className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary"
