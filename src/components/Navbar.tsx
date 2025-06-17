@@ -48,7 +48,7 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
-              className={`text-sm font-bold transition-colors hover:text-primary ${
+              className={`text-sm font-extrabold transition-colors hover:text-primary ${
                 isActive('/') ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -56,7 +56,7 @@ export function Navbar() {
             </Link>
             <Link
               to="/features"
-              className={`text-sm font-bold transition-colors hover:text-primary ${
+              className={`text-sm font-extrabold transition-colors hover:text-primary ${
                 isActive('/features') ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -64,7 +64,7 @@ export function Navbar() {
             </Link>
             <Link
               to="/pricing"
-              className={`text-sm font-bold transition-colors hover:text-primary ${
+              className={`text-sm font-extrabold transition-colors hover:text-primary ${
                 isActive('/pricing') ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -72,7 +72,7 @@ export function Navbar() {
             </Link>
             <a
               href="#contact"
-              className="text-sm font-bold transition-colors hover:text-primary text-muted-foreground"
+              className="text-sm font-extrabold transition-colors hover:text-primary text-muted-foreground"
             >
               Contact
             </a>
@@ -163,30 +163,30 @@ export function Navbar() {
             className="md:hidden py-4"
           >
             <div className="flex flex-col space-y-2">
-              <Link
-                to="/"
-                className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                to="/features"
-                className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Features
-              </Link>
+                <Link
+                  to="/"
+                  className="block px-3 py-2 text-base font-bold text-muted-foreground hover:text-primary"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/features"
+                  className="block px-3 py-2 text-base font-bold text-muted-foreground hover:text-primary"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Features
+                </Link>
                <Link
                  to="/pricing"
-                 className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary"
+                 className="block px-3 py-2 text-base font-bold text-muted-foreground hover:text-primary"
                  onClick={() => setIsMenuOpen(false)}
                >
                  Pricing
                </Link>
                <a
                  href="#contact"
-                 className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-primary"
+                 className="block px-3 py-2 text-base font-bold text-muted-foreground hover:text-primary"
                  onClick={() => setIsMenuOpen(false)}
                >
                  Contact

@@ -155,18 +155,34 @@ export default function Editor() {
     const filename = customFilename || title || 'document';
     const element = document.createElement('div');
     element.innerHTML = `
-      <div style="padding: 40px; font-family: 'Quicksand', Arial, sans-serif; max-width: 800px; margin: 0 auto;">
-        <h1 style="color: #333; margin-bottom: 30px; font-size: 2rem; font-weight: bold;">${title || 'Document'}</h1>
-        ${formattedContent || `<p style="margin: 1rem 0; line-height: 1.6;">${content}</p>`}
+      <div style="padding: 40px; font-family: 'Quicksand', Arial, sans-serif; max-width: 100%; margin: 0 auto; word-wrap: break-word; overflow-wrap: break-word;">
+        <h1 style="color: #333; margin-bottom: 30px; font-size: 2rem; font-weight: bold; page-break-inside: avoid;">${title || 'Document'}</h1>
+        <div style="line-height: 1.6; word-wrap: break-word; overflow-wrap: break-word;">
+          ${formattedContent || `<p style="margin: 1rem 0; line-height: 1.6;">${content}</p>`}
+        </div>
       </div>
     `;
 
     const opt = {
-      margin: 1,
+      margin: [0.75, 0.75, 0.75, 0.75],
       filename: `${filename}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      html2canvas: { 
+        scale: 1.5,
+        useCORS: true,
+        allowTaint: true,
+        width: 800,
+        windowWidth: 800,
+        scrollX: 0,
+        scrollY: 0
+      },
+      jsPDF: { 
+        unit: 'in', 
+        format: 'letter', 
+        orientation: 'portrait',
+        compress: true
+      },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     html2pdf().set(opt).from(element).save();

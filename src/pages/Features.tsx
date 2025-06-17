@@ -219,7 +219,7 @@ const Features = () => {
             </p>
             <motion.a
               href="/editor"
-              className="inline-flex items-center gap-2 btn-glass text-lg px-8 py-4 rounded-xl"
+              className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-4 rounded-xl transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
