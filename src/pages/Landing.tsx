@@ -219,11 +219,11 @@ export default function Landing() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="glass hover:glass-strong transition-all duration-300 border-border/40">
-                  <CardContent className="p-6">
+                <Card className="glass hover:glass-strong transition-all duration-300 border-border/40 h-full">
+                  <CardContent className="p-6 flex flex-col h-full">
                     <feature.icon className="h-12 w-12 text-primary mb-4" />
                     <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                    <p className="text-muted-foreground">{feature.description}</p>
+                    <p className="text-muted-foreground flex-1">{feature.description}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -294,17 +294,17 @@ export default function Landing() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="glass hover:glass-strong transition-all duration-300 border-border/40">
-                  <CardContent className="p-6">
+                <Card className="glass hover:glass-strong transition-all duration-300 border-border/40 h-full">
+                  <CardContent className="p-6 flex flex-col h-full">
                     <div className="flex mb-4">
                       {Array.from({ length: testimonial.rating }).map((_, i) => (
                         <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
                       ))}
                     </div>
-                    <p className="text-muted-foreground mb-4 italic">
+                    <p className="text-muted-foreground mb-4 italic flex-1">
                       "{testimonial.content}"
                     </p>
-                    <div>
+                    <div className="mt-auto">
                       <p className="font-semibold">{testimonial.name}</p>
                       <p className="text-sm text-muted-foreground">{testimonial.role}</p>
                     </div>
