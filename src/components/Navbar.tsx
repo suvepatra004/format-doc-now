@@ -70,12 +70,14 @@ export function Navbar() {
             >
               Pricing
             </Link>
-            <a
-              href="#contact"
-              className="text-sm font-extrabold transition-colors hover:text-primary text-muted-foreground"
+            <Link
+              to="/contact"
+              className={`text-sm font-extrabold transition-colors hover:text-primary ${
+                isActive('/contact') ? 'text-primary' : 'text-muted-foreground'
+              }`}
             >
               Contact
-            </a>
+            </Link>
             {user && (
                 <Link
                   to="/dashboard"
@@ -184,13 +186,13 @@ export function Navbar() {
                >
                  Pricing
                </Link>
-               <a
-                 href="#contact"
+               <Link
+                 to="/contact"
                  className="block px-3 py-2 text-base font-bold text-muted-foreground hover:text-primary"
                  onClick={() => setIsMenuOpen(false)}
                >
                  Contact
-               </a>
+               </Link>
                {user && (
                 <Link
                   to="/dashboard"
