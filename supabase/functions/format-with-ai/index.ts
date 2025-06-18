@@ -31,48 +31,41 @@ const handler = async (req: Request): Promise<Response> => {
       story: "Format it as an engaging narrative with storytelling elements."
     };
 
-    const prompt = `You are a professional content formatter and editor.
+    const prompt = `You are a smart content formatter.
 
-Take the following messy, unstructured, and casual content and transform it into a clean, properly formatted, well-organized text. Follow the steps below:
+Your job is to clean up and format messy or unstructured user input into a presentable, readable form — without ignoring or judging any part of the content. **Always prioritize the user's input.** Even if it's vague, short, or unclear, treat it as valid and important.
+
+---
 
 ### GOAL:
-Make it clear, grammatically correct, and presentable, while preserving the original meaning and tone unless instructed otherwise.
+Format the content for better readability while preserving the user’s original words, tone, and structure as much as possible.
 
 ---
 
 ### INSTRUCTIONS:
 
-1. **Fix Grammar & Typos**: Correct spelling, grammar, and punctuation errors. Replace internet slang or shorthand (like "u", "lol", "idk", "cuz", "btw", "tbh") with appropriate professional language.
-
-2. **Structure into Paragraphs**: Break the long content into meaningful paragraphs for easier readability. Ensure each paragraph presents a clear idea.
-
-3. **Add Subheadings** (H2): If the content naturally shifts topics, insert relevant subheadings to guide the reader. Subheadings should be short and descriptive.
-
-4. **Format Sentences**: Keep the sentence length readable. Split run-on sentences into multiple ones where appropriate.
-
-5. **Smart Punctuation**: Use correct punctuation like em-dashes (—), ellipses (…) only when necessary, and smart quotes (" ").
-
-6. **Tone**: ${toneInstructions[tone]}
-
-7. **Optional Enhancements** (if natural):
-   - Add a brief introductory sentence at the top (1-2 lines).
-   - Add a conclusion/summary if the content seems to end abruptly.
-   - If the content sounds repetitive, condense it without losing the point.
+1. **Fix Grammar & Typos**: Correct any clear spelling, grammar, and punctuation issues.
+2. **Preserve Meaning**: Do not skip or ignore unclear text — include everything.
+3. **Structure into Paragraphs**: Organize the text using logical paragraph breaks.
+4. **Use Subheadings (`<h2>`)**: Only if there are clearly distinct topic shifts.
+5. **Use Proper HTML**:
+   - `<p>` for paragraphs
+   - `<h2>` for subheadings (only when meaningful)
+6. **No Summarizing**: Don’t rewrite or summarize unclear content — just format it respectfully.
+7. **Avoid “Unclear” messages**: Never write things like "This content is unclear" — just include the content and apply basic formatting.
 
 ---
 
 ### OUTPUT FORMAT:
-- Return clean HTML with proper tags (h2, p, strong, em).
-- Use h2 for subheadings.
-- Use proper paragraph tags.
-- No extra commentary — just return the cleaned content.
+- Return valid HTML (with `<p>`, optional `<h2>`)
+- No comments, disclaimers, or extra analysis
 
 ---
 
-### INPUT (Messy Text):
+### INPUT:
 ${content}
 
-Please format this content according to the instructions above.`;
+Now format this content faithfully and respectfully.`;
 
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
       method: 'POST',
