@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { ContactSection } from '@/components/ContactSection';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Linkedin, Github, X } from 'lucide-react';
 
 const Contact = () => {
@@ -43,44 +42,44 @@ const Contact = () => {
               Get in touch with us for any questions, feedback, or support. We're here to help you succeed.
             </p>
           </motion.div>
-
-          {/* Social Media Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-16"
-          >
-            <Card className="glass hover:glass-strong transition-all duration-300 border-border/40 max-w-md mx-auto">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4 text-center">Connect With Us</h3>
-                <div className="flex justify-center space-x-6">
-                  {socialLinks.map((social) => (
-                    <motion.a
-                      key={social.name}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`p-3 rounded-full glass-strong transition-all duration-300 ${social.color}`}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <social.icon className="h-6 w-6" />
-                      <span className="sr-only">{social.name}</span>
-                    </motion.a>
-                  ))}
-                </div>
-                <p className="text-sm text-muted-foreground text-center mt-4">
-                  Follow us for updates and connect with our community
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
         </div>
       </section>
 
       {/* Contact Form Section */}
       <ContactSection />
+
+      {/* Social Media Links */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="text-lg font-semibold mb-6">Connect With Us</h3>
+            <div className="flex justify-center space-x-6">
+              {socialLinks.map((social) => (
+                <motion.a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`p-3 rounded-full glass-strong transition-all duration-300 ${social.color}`}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <social.icon className="h-6 w-6" />
+                  <span className="sr-only">{social.name}</span>
+                </motion.a>
+              ))}
+            </div>
+            <p className="text-sm text-muted-foreground mt-4">
+              Follow us for updates and connect with our community
+            </p>
+          </motion.div>
+        </div>
+      </section>
     </div>
   );
 };

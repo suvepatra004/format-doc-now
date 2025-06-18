@@ -14,6 +14,9 @@ import {
   Star,
   CheckCircle,
   ArrowRight,
+  Linkedin,
+  Github,
+  X,
 } from 'lucide-react';
 
 export default function Landing() {
@@ -98,6 +101,27 @@ export default function Landing() {
       content: 'I recommend PDFox to all my students. It helps them focus on content rather than formatting.',
       rating: 5,
     },
+  ];
+
+  const socialLinks = [
+    {
+      name: 'LinkedIn',
+      url: 'https://www.linkedin.com/in/suvendu-kumar-patra-723850230',
+      icon: Linkedin,
+      color: 'hover:text-blue-600'
+    },
+    {
+      name: 'GitHub',
+      url: 'https://github.com/suvepatra004',
+      icon: Github,
+      color: 'hover:text-gray-800 dark:hover:text-gray-200'
+    },
+    {
+      name: 'X (Twitter)',
+      url: 'https://x.com/DevRative',
+      icon: X,
+      color: 'hover:text-blue-400'
+    }
   ];
 
   return (
@@ -295,6 +319,39 @@ export default function Landing() {
 
       {/* Contact Section */}
       <ContactSection />
+
+      {/* Social Media Links */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="text-lg font-semibold mb-6">Connect With Us</h3>
+            <div className="flex justify-center space-x-6">
+              {socialLinks.map((social) => (
+                <motion.a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`p-3 rounded-full glass-strong transition-all duration-300 ${social.color}`}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <social.icon className="h-6 w-6" />
+                  <span className="sr-only">{social.name}</span>
+                </motion.a>
+              ))}
+            </div>
+            <p className="text-sm text-muted-foreground mt-4">
+              Follow us for updates and connect with our community
+            </p>
+          </motion.div>
+        </div>
+      </section>
     </div>
   );
 }
