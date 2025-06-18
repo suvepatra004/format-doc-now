@@ -5,19 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { ContactSection } from '@/components/ContactSection';
 import { SEO } from '@/components/SEO';
+import { landingFeatures } from '@/data/features';
+import { testimonials } from '@/data/testimonials';
+import { steps } from '@/data/steps';
+import { socialLinks } from '@/data/socialLinks';
 import {
-  FileText,
-  Download,
-  Edit,
-  Zap,
-  Shield,
-  Clock,
   Star,
   CheckCircle,
   ArrowRight,
-  Linkedin,
-  Github,
-  X,
 } from 'lucide-react';
 
 export default function Landing() {
@@ -32,98 +27,6 @@ export default function Landing() {
     }
   };
 
-  const features = [
-    {
-      icon: Edit,
-      title: 'Smart Formatting',
-      description: 'Automatically clean and format your text with proper headings, spacing, and structure.',
-    },
-    {
-      icon: Download,
-      title: 'Multiple Formats',
-      description: 'Download your documents as PDF, TXT, or other popular formats instantly.',
-    },
-    {
-      icon: Zap,
-      title: 'Lightning Fast',
-      description: 'Process and format your documents in seconds, not minutes.',
-    },
-    {
-      icon: Shield,
-      title: 'Secure & Private',
-      description: 'Your documents are processed securely and never stored without permission.',
-    },
-    {
-      icon: Clock,
-      title: 'Time Saving',
-      description: 'Save hours of manual formatting work with our intelligent automation.',
-    },
-    {
-      icon: FileText,
-      title: 'Rich Text Editor',
-      description: 'Advanced editing capabilities with drag-and-drop, tables, and more.',
-    },
-  ];
-
-  const steps = [
-    {
-      step: '01',
-      title: 'Paste Your Content',
-      description: 'Simply paste your unformatted text into our editor.',
-    },
-    {
-      step: '02',
-      title: 'Auto-Format Magic',
-      description: 'Our AI automatically cleans and structures your content.',
-    },
-    {
-      step: '03',
-      title: 'Customize & Download',
-      description: 'Fine-tune the formatting and download in your preferred format.',
-    },
-  ];
-
-  const testimonials = [
-    {
-      name: 'Sarah Chen',
-      role: 'Graduate Student',
-      content: 'PDFox saved me hours of formatting work on my research papers. The automatic structuring is incredible!',
-      rating: 5,
-    },
-    {
-      name: 'Mike Rodriguez',
-      role: 'Content Writer',
-      content: 'As someone who handles multiple documents daily, this tool is a game-changer. Clean, fast, and reliable.',
-      rating: 5,
-    },
-    {
-      name: 'Dr. Emily Johnson',
-      role: 'University Professor',
-      content: 'I recommend PDFox to all my students. It helps them focus on content rather than formatting.',
-      rating: 5,
-    },
-  ];
-
-  const socialLinks = [
-    {
-      name: 'LinkedIn',
-      url: 'https://www.linkedin.com/in/suvendu-kumar-patra-723850230',
-      icon: Linkedin,
-      color: 'hover:text-blue-600'
-    },
-    {
-      name: 'GitHub',
-      url: 'https://github.com/suvepatra004',
-      icon: Github,
-      color: 'hover:text-gray-800 dark:hover:text-gray-200'
-    },
-    {
-      name: 'X (Twitter)',
-      url: 'https://x.com/DevRative',
-      icon: X,
-      color: 'hover:text-blue-400'
-    }
-  ];
 
   const websiteStructuredData = {
     "@context": "https://schema.org",
@@ -212,7 +115,7 @@ export default function Landing() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
+            {landingFeatures.map((feature, index) => (
               <motion.div
                 key={feature.title}
                 initial={{ opacity: 0, y: 20 }}
