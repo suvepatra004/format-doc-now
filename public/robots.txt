@@ -12,3 +12,10 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# Sitemap
+Sitemap: https://pdfox-generator.lovable.app/sitemap.xml
+
+# Disallow admin or private paths (if any exist in future)
+# User-agent: *
+# Disallow: /admin/

@@ -3,6 +3,7 @@ import { Check, Zap, Star, Crown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SEO } from '@/components/SEO';
 
 const Pricing = () => {
   const plans = [
@@ -74,8 +75,48 @@ const Pricing = () => {
     }
   };
 
+  const pricingStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "PDFox Pricing - Choose Your Plan",
+    "description": "Simple, transparent pricing for PDFox. Start free and upgrade as you grow. Professional document formatting for everyone.",
+    "url": "https://pdfox-generator.lovable.app/pricing",
+    "mainEntity": {
+      "@type": "Product",
+      "name": "PDFox",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free Plan",
+          "price": "0",
+          "priceCurrency": "INR"
+        },
+        {
+          "@type": "Offer", 
+          "name": "Standard Plan",
+          "price": "299",
+          "priceCurrency": "INR"
+        },
+        {
+          "@type": "Offer",
+          "name": "Premium Plan", 
+          "price": "599",
+          "priceCurrency": "INR"
+        }
+      ]
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <SEO
+        title="Pricing Plans - Simple & Transparent | PDFox"
+        description="Simple, transparent pricing for PDFox. Start free and upgrade as you grow. Professional document formatting for everyone from ₹0 to ₹599 per month."
+        keywords="PDFox pricing, document formatter pricing, AI formatting plans, PDF generator cost, content formatter subscription"
+        canonicalUrl="https://pdfox-generator.lovable.app/pricing"
+        structuredData={pricingStructuredData}
+      />
+      <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -186,6 +227,7 @@ const Pricing = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

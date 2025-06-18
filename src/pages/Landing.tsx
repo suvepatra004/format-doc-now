@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { ContactSection } from '@/components/ContactSection';
+import { SEO } from '@/components/SEO';
 import {
   FileText,
   Download,
@@ -124,8 +125,35 @@ export default function Landing() {
     }
   ];
 
+  const websiteStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "PDFox - Smart Content Formatter",
+    "description": "Transform messy text into professional documents with AI-powered formatting. Clean, structure, and format your content instantly.",
+    "url": "https://pdfox-generator.lovable.app/",
+    "mainEntity": {
+      "@type": "SoftwareApplication",
+      "name": "PDFox",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+  };
+
   return (
-    <div className="min-h-screen">
+    <>
+      <SEO
+        title="PDFox - Smart Content Formatter | AI-Powered Document Creator"
+        description="Transform messy text into professional documents with PDFox. AI-powered content formatter that cleans, structures, and formats your content instantly."
+        keywords="content formatter, AI PDF generator, document formatter, text formatter, smart formatting, PDF creator, document editor, content cleaner, AI document tools"
+        canonicalUrl="https://pdfox-generator.lovable.app/"
+        structuredData={websiteStructuredData}
+      />
+      <div className="min-h-screen">
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -353,5 +381,6 @@ export default function Landing() {
         </div>
       </section>
     </div>
+    </>
   );
 }

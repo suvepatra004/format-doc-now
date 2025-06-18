@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { SEO } from '@/components/SEO';
 
 const Features = () => {
   const features = [
@@ -113,8 +114,24 @@ const Features = () => {
     }
   };
 
+  const featuresStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "PDFox Features - Smart Document Formatting Tools",
+    "description": "Discover powerful features of PDFox: AI formatting, multiple export formats, rich text editor, and more.",
+    "url": "https://pdfox-generator.lovable.app/features"
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <SEO
+        title="Features - AI Document Formatting Tools | PDFox"
+        description="Discover powerful features of PDFox: AI formatting, multiple export formats, rich text editor, drag-and-drop support, and instant document processing."
+        keywords="AI formatting features, document editor tools, PDF export, rich text editor, smart formatting, content processing"
+        canonicalUrl="https://pdfox-generator.lovable.app/features"
+        structuredData={featuresStructuredData}
+      />
+      <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -230,6 +247,7 @@ const Features = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

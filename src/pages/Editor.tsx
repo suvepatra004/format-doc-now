@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Download, FileText, Save, File, Sparkles } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { SEO } from '@/components/SEO';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import html2pdf from 'html2pdf.js';
@@ -161,8 +162,26 @@ export default function Editor() {
     });
   };
 
+  const editorStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDFox Document Editor",
+    "description": "AI-powered document editor and formatter. Transform messy text into professional documents instantly.",
+    "url": "https://pdfox-generator.lovable.app/editor",
+    "applicationCategory": "ProductivityApplication",
+    "operatingSystem": "Web Browser"
+  };
+
   return (
-    <div className="min-h-screen pt-20 px-4 sm:px-6 lg:px-8 grain">
+    <>
+      <SEO
+        title="Document Editor - Format Text with AI | PDFox"
+        description="Use PDFox's powerful AI document editor to format, clean, and structure your content. Transform messy text into professional documents instantly."
+        keywords="document editor, AI text formatter, content editor, PDF generator, text formatting tool, smart editor"
+        canonicalUrl="https://pdfox-generator.lovable.app/editor"
+        structuredData={editorStructuredData}
+      />
+      <div className="min-h-screen pt-20 px-4 sm:px-6 lg:px-8 grain">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -307,5 +326,6 @@ export default function Editor() {
         </div>
       </div>
     </div>
+    </>
   );
 }

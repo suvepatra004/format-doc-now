@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { ContactSection } from '@/components/ContactSection';
 import { Button } from '@/components/ui/button';
 import { Linkedin, Github, X } from 'lucide-react';
+import { SEO } from '@/components/SEO';
 
 const Contact = () => {
   const socialLinks = [
@@ -25,8 +26,24 @@ const Contact = () => {
     }
   ];
 
+  const contactStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact PDFox - Get in Touch",
+    "description": "Contact PDFox for questions, feedback, or support. We're here to help you succeed with professional document formatting.",
+    "url": "https://pdfox-generator.lovable.app/contact"
+  };
+
   return (
-    <div className="min-h-screen bg-background pt-20">
+    <>
+      <SEO
+        title="Contact Us - Get Support & Feedback | PDFox"
+        description="Contact PDFox for questions, feedback, or support. We're here to help you succeed with professional document formatting and AI-powered content tools."
+        keywords="contact PDFox, document formatter support, AI formatting help, customer service, feedback"
+        canonicalUrl="https://pdfox-generator.lovable.app/contact"
+        structuredData={contactStructuredData}
+      />
+      <div className="min-h-screen bg-background pt-20">
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
@@ -81,6 +98,7 @@ const Contact = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 
